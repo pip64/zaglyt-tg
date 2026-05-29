@@ -60,6 +60,7 @@ func main() {
 	handler = &h
 
 	//commands
+	b.RegisterHandler(bot.HandlerTypeMessageText, "/start", bot.MatchTypePrefix, handler.StartCommandHandler)
 	b.RegisterHandler(bot.HandlerTypeMessageText, "/switcher", bot.MatchTypePrefix, handler.SwitcherCommandHandler)
 	b.RegisterHandler(bot.HandlerTypeMessageText, "/clear", bot.MatchTypePrefix, handler.ClearCommandHandler)
 	b.RegisterHandler(bot.HandlerTypeMessageText, "/download", bot.MatchTypePrefix, handler.DownloadCommandHandler)

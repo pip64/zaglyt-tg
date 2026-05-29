@@ -41,3 +41,22 @@ func GetClearKeyboard() *models.InlineKeyboardMarkup {
 		},
 	}
 }
+
+func GetLinksKeyboard() *models.InlineKeyboardMarkup {
+	return &models.InlineKeyboardMarkup{
+		InlineKeyboard: [][]models.InlineKeyboardButton{
+			{
+				{
+					Text: "Добавить в чат",
+					URL:  "https://t.me/zaglit_bot?startgroup=start",
+				},
+			},
+			{
+				{
+					Text: "Канал Заглыта",
+					URL:  "https://t.me/zaglit",
+				},
+			},
+		},
+	}
+}
