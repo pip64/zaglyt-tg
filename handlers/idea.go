@@ -35,7 +35,7 @@ func (h *Handler) IdeaCommandHandler(ctx context.Context, b *bot.Bot, update *go
 
 		_, _ = b.SendMessage(ctx, &bot.SendMessageParams{
 			ChatID: config.IdeasChatID,
-			Text:   ideaText,
+			Text:   fmt.Sprintf("Новая идея!\n\n%s", ideaText),
 		})
 
 		_, err = b.SendMessage(ctx, &bot.SendMessageParams{
