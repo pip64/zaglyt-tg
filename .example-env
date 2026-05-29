@@ -3,6 +3,8 @@ BOT_NAME=""
 
 DEVELOPERS="developer_id_1 developer_id_2 developer_id_3"
 
+IDEAS_CHAT="chat_id"
+
 DB_DRIVER=""
 DB_HOST=""
 DB_PORT=""
