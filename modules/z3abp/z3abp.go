@@ -156,7 +156,14 @@ func ContainsQuery(line, query string) bool {
 
 func FilterLines(db []string, stems []string, query string) []string {
 	var foundLines []string
-	for _, line := range db {
+
+	limit := 5000
+	startIdx := 0
+	if len(db) > limit {
+		startIdx = len(db) - limit
+	}
+
+	for _, line := range db[startIdx:] {
 		if ContainsQuery(line, query) {
 			continue
 		}
