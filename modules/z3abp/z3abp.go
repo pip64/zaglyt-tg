@@ -59,19 +59,28 @@ func StartMyStem() (*MyStemWrapper, error) {
 		return nil, err
 	}
 
+	scanner := bufio.NewScanner(outPipe)
+	buf := make([]byte, 1024*1024)
+	scanner.Buffer(buf, 10*1024*1024)
+
 	return &MyStemWrapper{
 		cmd: cmd,
 		in:  in,
-		out: bufio.NewScanner(outPipe),
+		out: scanner,
 	}, nil
 }
 
 func (m *MyStemWrapper) Analyze(text string) ([]MystemItem, error) {
-	m.mu.Lock()
-	defer m.mu.Unlock()
-
 	text = strings.ReplaceAll(text, "\n", " ")
 	text = strings.ReplaceAll(text, "\r", "")
+	text = strings.TrimSpace(text)
+
+	if text == "" {
+		return nil, nil
+	}
+
+	m.mu.Lock()
+	defer m.mu.Unlock()
 
 	_, err := m.in.Write([]byte(text + "\n"))
 	if err != nil {
@@ -147,7 +156,14 @@ func ContainsQuery(line, query string) bool {
 
 func FilterLines(db []string, stems []string, query string) []string {
 	var foundLines []string
-	for _, line := range db {
+
+	limit := 5000
+	startIdx := 0
+	if len(db) > limit {
+		startIdx = len(db) - limit
+	}
+
+	for _, line := range db[startIdx:] {
 		if ContainsQuery(line, query) {
 			continue
 		}
@@ -450,6 +466,20 @@ func GenerateRandomMarkov(db []string, minWords, maxWords int) string {
 	if len(db) == 0 {
 		return ""
 	}
-	model := buildMorphMarkovChain(db)
+
+	limit := 50
+	if len(db) < limit {
+		limit = len(db)
+	}
+
+	randDb := make([]string, len(db))
+	copy(randDb, db)
+	rand.Shuffle(len(randDb), func(i, j int) {
+		randDb[i], randDb[j] = randDb[j], randDb[i]
+	})
+
+	subset := randDb[:limit]
+
+	model := buildMorphMarkovChain(subset)
 	return generateMorphMarkovText(model, minWords, maxWords)
 }

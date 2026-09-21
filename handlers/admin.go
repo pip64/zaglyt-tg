@@ -4,6 +4,7 @@ package handlers
 import (
 	"context"
 	"fmt"
+	"strconv"
 	"strings"
 	"time"
 	"zaglyt-tg/modules/helpers"
@@ -18,6 +19,20 @@ func (h *Handler) WhoAmICommandHandler(ctx context.Context, b *bot.Bot, update *
 			_, _ = b.SendMessage(ctx, &bot.SendMessageParams{
 				ChatID: update.Message.Chat.ID,
 				Text:   "Разработчик.",
+				ReplyParameters: &goTelegramModels.ReplyParameters{
+					MessageID: update.Message.ID,
+				},
+			})
+		}
+	}
+}
+
+func (h *Handler) GetChatIDCommandHandler(ctx context.Context, b *bot.Bot, update *goTelegramModels.Update) {
+	if update.Message != nil {
+		if helpers.IsUserDeveloper(update.Message.From.ID) {
+			_, _ = b.SendMessage(ctx, &bot.SendMessageParams{
+				ChatID: update.Message.Chat.ID,
+				Text:   strconv.FormatInt(update.Message.Chat.ID, 10),
 				ReplyParameters: &goTelegramModels.ReplyParameters{
 					MessageID: update.Message.ID,
 				},

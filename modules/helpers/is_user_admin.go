@@ -19,8 +19,11 @@ func IsUserAdmin(ctx context.Context, b *bot.Bot, chatID int64, userID int64, ch
 		return false, err
 	}
 
-	status := member.Owner.Status
-	if status == "administrator" || status == "creator" {
+	if member.Owner != nil {
+		return true, nil
+	}
+
+	if member.Administrator != nil {
 		return true, nil
 	}
 
