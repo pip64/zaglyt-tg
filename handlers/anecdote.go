@@ -42,6 +42,8 @@ func (h *Handler) GenerateAnecdoteCommandHandler(ctx context.Context, b *bot.Bot
 					MessageID: update.Message.ID,
 				},
 			})
+
+			return
 		}
 
 		anecdote, err := helpers.GenerateAnecdote(dataset)
